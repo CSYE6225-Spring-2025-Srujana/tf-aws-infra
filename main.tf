@@ -23,6 +23,9 @@ resource "aws_vpc" "main" {
   tags = {
     Name = var.vpc_name
   }
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Create Internet Gateway
