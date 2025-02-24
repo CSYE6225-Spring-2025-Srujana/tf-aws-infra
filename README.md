@@ -1,4 +1,4 @@
-## AWS Networking Infrastructure Setup using Terraform
+## AWS Networking Infrastructure Setup using Terraform    
 # Introduction
 * This repository (tf-aws-infra) contains Terraform configuration files to create a complete networking setup on AWS. The infrastructure includes:
   - A Virtual Private Cloud (VPC)
