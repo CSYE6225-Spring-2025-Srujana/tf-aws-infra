@@ -36,3 +36,19 @@ variable "aws_profile" {
   description = "AWS CLI Profile to use"
   type        = string
 }
+
+# variable "ami_name_prefix" {
+#   description = "Prefix for the AMI built using Packer"
+#   type        = string
+# }
+
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "app_port" {
+  description = "Port on which the application runs"
+  type        = number
+}
