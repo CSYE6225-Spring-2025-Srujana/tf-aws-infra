@@ -16,3 +16,8 @@ output "private_subnet_ids" {
 output "internet_gateway_id" {
   value = aws_internet_gateway.gw.id
 }
+
+output "webapp_public_ip" {
+  description = "Public IP of the WebApp EC2 instance"
+  value       = aws_instance.web_app.public_ip
+}
