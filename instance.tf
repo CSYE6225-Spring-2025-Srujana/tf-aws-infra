@@ -1,12 +1,12 @@
 data "aws_ami" "webapp_ami" {
   most_recent = true
   owners      = ["self", "794038250804"]
- 
+
   filter {
     name   = "name"
     values = ["webapp-ami-*"]
   }
- 
+
   filter {
     name   = "root-device-type"
     values = ["ebs"]
