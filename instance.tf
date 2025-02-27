@@ -1,16 +1,21 @@
-# data "aws_ami" "latest_custom_ami" {
-#   most_recent = true
-#   owners      = ["self"]  # Use "self" if the AMI is created in your AWS account
-
-#   filter {
-#     name   = "name"
-#     values = ["${var.ami_name_prefix}-*"]  # Use the prefix from Packer
-#   }
-# }
-
-data "aws_ssm_parameter" "latest_custom_ami" {
-  name = "/custom-ami/latest"
+data "aws_ami" "webapp_ami" {
+  most_recent = true
+  owners      = ["self", "794038250804"]
+ 
+  filter {
+    name   = "name"
+    values = ["webapp-ami-*"]
+  }
+ 
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
 }
+
+# data "aws_ssm_parameter" "latest_custom_ami" {
+#   name = "/custom-ami/latest"
+# }
 
 resource "tls_private_key" "webapp_key" {
   algorithm = "RSA"
@@ -78,8 +83,7 @@ resource "aws_security_group" "app_sg" {
 }
 
 resource "aws_instance" "web_app" {
-  #   ami                    = data.aws_ami.latest_custom_ami.id
-  ami                         = data.aws_ssm_parameter.latest_custom_ami.value
+  ami                         = data.aws_ami.webapp_ami.id
   instance_type               = var.instance_type
   subnet_id                   = element(aws_subnet.subnets_public[*].id, 0) # Launch in first public subnet
   vpc_security_group_ids      = [aws_security_group.app_sg.id]
