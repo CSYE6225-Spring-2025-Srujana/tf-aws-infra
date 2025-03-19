@@ -21,3 +21,7 @@ output "webapp_public_ip" {
   description = "Public IP of the WebApp EC2 instance"
   value       = aws_instance.web_app.public_ip
 }
+
+output "db_address" {
+  value = aws_db_instance.rds_instance.address
+}
