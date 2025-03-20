@@ -5,6 +5,10 @@
   - Public and private subnets across 3 availability zones
   - An Internet Gateway
   - Route tables for public and private subnets
+  - An Application Security Group for web applications
+  - An EC2 instance using a custom AMI
+  - An RDS instance for hosting mysql databases
+  - An S3 bucket and database security group
 
 - This Terraform setup allows creating multiple VPCs with their own subnets, gateways, and routing tables without hardcoded values. This is achieved by utilizing variables for customization.
 
