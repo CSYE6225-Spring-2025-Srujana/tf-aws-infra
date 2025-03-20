@@ -61,19 +61,6 @@ resource "aws_iam_role" "ec2_s3_role" {
   })
 }
 
-# resource "aws_iam_policy" "ec2_s3_policy" {
-#   name = "${var.vpc_name}-ec2-s3-policy"
-
-#   policy = jsonencode({
-#     Version = "2012-10-17",
-#     Statement = [{
-#       Effect = "Allow",
-#       Action = "*",
-#       Resource = "*"
-#     }]
-#   })
-# }
-
 resource "aws_iam_policy" "ec2_s3_policy" {
   name = "${var.vpc_name}-ec2-s3-policy"
 
