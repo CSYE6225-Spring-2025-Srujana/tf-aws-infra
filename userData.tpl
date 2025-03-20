@@ -36,23 +36,3 @@ else
   echo "Failed to create .env file"
   exit 1
 fi
-
-# Ensure systemd re-reads configurations
-# echo "Reloading systemd daemon..."
-# sudo systemctl daemon-reload
-
-# # Check if the service exists before restarting
-# if systemctl list-units --full -all | grep -q "webapp.service"; then
-#   echo "Restarting webapp.service..."
-#   sudo systemctl restart webapp.service
-# else
-#   echo "Starting webapp.service for the first time..."
-#   sudo systemctl start webapp.service
-# fi
-
-# # Enable service to start on boot
-# sudo systemctl enable webapp.service
-
-# # Check service status
-# echo "Checking webapp.service status..."
-# sudo systemctl status webapp.service --no-pager
