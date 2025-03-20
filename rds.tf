@@ -61,19 +61,6 @@ resource "aws_iam_role" "ec2_s3_role" {
   })
 }
 
-resource "aws_iam_policy" "ec2_s3_policy" {
-  name = "${var.vpc_name}-ec2-s3-policy"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Effect = "Allow",
-      Action = "*",
-      Resource = "*"
-    }]
-  })
-}
-
 # resource "aws_iam_policy" "ec2_s3_policy" {
 #   name = "${var.vpc_name}-ec2-s3-policy"
 
@@ -81,27 +68,40 @@ resource "aws_iam_policy" "ec2_s3_policy" {
 #     Version = "2012-10-17",
 #     Statement = [{
 #       Effect = "Allow",
-#       Action = [
-#         "s3:PutObject",
-#         "s3:GetObject",
-#         "s3:DeleteObject",
-#         "s3:ListBucket",
-#         "s3:CreateBucket",
-#         "s3:PutBucketTagging",
-#         "s3:PutEncryptionConfiguration",
-#         "iam:CreateRole",
-#         "iam:AttachRolePolicy",
-#         "iam:PassRole",
-#         "rds:CreateDBSubnetGroup",
-#         "rds:CreateDBParameterGroup"
-#       ],
-#       Resource = [
-#         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}",
-#         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}/*"
-#       ]
+#       Action = "*",
+#       Resource = "*"
 #     }]
 #   })
 # }
+
+resource "aws_iam_policy" "ec2_s3_policy" {
+  name = "${var.vpc_name}-ec2-s3-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect = "Allow",
+      Action = [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject",
+        "s3:ListBucket",
+        "s3:CreateBucket",
+        "s3:PutBucketTagging",
+        "s3:PutEncryptionConfiguration",
+        "iam:CreateRole",
+        "iam:AttachRolePolicy",
+        "iam:PassRole",
+        "rds:CreateDBSubnetGroup",
+        "rds:CreateDBParameterGroup"
+      ],
+      Resource = [
+        "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}",
+        "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}/*"
+      ]
+    }]
+  })
+}
 
 resource "aws_iam_role_policy_attachment" "attach_s3_policy" {
   role       = aws_iam_role.ec2_s3_role.name
