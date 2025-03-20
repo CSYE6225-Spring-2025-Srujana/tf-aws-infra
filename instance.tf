@@ -93,15 +93,15 @@ resource "aws_instance" "web_app" {
   iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
 
   user_data = templatefile("${path.module}/userData.tpl", {
-    DB_NAME     = aws_db_instance.rds_instance.db_name
-    DB_USER     = aws_db_instance.rds_instance.username
-    DB_PASSWORD = aws_db_instance.rds_instance.password
-    DB_HOST     = aws_db_instance.rds_instance.address
-    DB_PORT     = 3306
-    DB_DIALECT  = "mysql"
-    DB_FORCE_CHANGES=false
-    S3_BUCKET_NAME = aws_s3_bucket.webapp_bucket.bucket
-    AWS_REGION   = var.aws_region
+    DB_NAME          = aws_db_instance.rds_instance.db_name
+    DB_USER          = aws_db_instance.rds_instance.username
+    DB_PASSWORD      = aws_db_instance.rds_instance.password
+    DB_HOST          = aws_db_instance.rds_instance.address
+    DB_PORT          = 3306
+    DB_DIALECT       = "mysql"
+    DB_FORCE_CHANGES = false
+    S3_BUCKET_NAME   = aws_s3_bucket.webapp_bucket.bucket
+    AWS_REGION       = var.aws_region
   })
   root_block_device {
     volume_size           = 25
