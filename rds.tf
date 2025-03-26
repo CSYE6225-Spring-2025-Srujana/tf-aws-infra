@@ -86,8 +86,8 @@ resource "aws_iam_policy" "ec2_s3_policy" {
         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}",
         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}/*"
       ]
-    },
-    {
+      },
+      {
         Effect = "Allow"
         Action = [
           "cloudwatch:PutMetricData",
@@ -106,7 +106,7 @@ resource "aws_iam_policy" "ec2_s3_policy" {
           "ssm:DescribeParameters"
         ]
         Resource = "arn:aws:ssm:*:*:parameter/AmazonCloudWatch-*"
-      }]
+    }]
   })
 }
 
