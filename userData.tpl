@@ -36,3 +36,17 @@ else
   echo "Failed to create .env file"
   exit 1
 fi
+
+
+CLOUDWATCH_CONFIG_PATH="/opt/aws/amazon-cloudwatch-agent/etc/cloudwatch-config.json"
+ 
+ if [ -f "$CLOUDWATCH_CONFIG_PATH" ]; then
+     sudo systemctl enable amazon-cloudwatch-agent
+ 
+     sudo systemctl restart amazon-cloudwatch-agent
+ 
+     echo "CloudWatch agent configured and restarted successfully."
+ else
+     echo "CloudWatch configuration file not found at $CLOUDWATCH_CONFIG_PATH."
+     exit 1
+ fi
