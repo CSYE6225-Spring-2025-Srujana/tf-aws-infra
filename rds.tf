@@ -48,8 +48,8 @@ resource "aws_s3_bucket_public_access_block" "bucket_public_access" {
   restrict_public_buckets = true
 }
 
-resource "aws_iam_role" "ec2_s3_role" {
-  name = "${var.vpc_name}-ec2-s3-role"
+resource "aws_iam_role" "ec2_role" {
+  name = "${var.vpc_name}-ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -86,18 +86,42 @@ resource "aws_iam_policy" "ec2_s3_policy" {
         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}",
         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}/*"
       ]
-    }]
+    },
+    {
+        Effect = "Allow"
+        Action = [
+          "cloudwatch:PutMetricData",
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams",
+          "logs:DescribeLogGroups"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter",
+          "ssm:DescribeParameters"
+        ]
+        Resource = "arn:aws:ssm:*:*:parameter/AmazonCloudWatch-*"
+      }]
   })
 }
 
 resource "aws_iam_role_policy_attachment" "attach_s3_policy" {
-  role       = aws_iam_role.ec2_s3_role.name
+  role       = aws_iam_role.ec2_role.name
   policy_arn = aws_iam_policy.ec2_s3_policy.arn
 }
 
+resource "aws_iam_role_policy_attachment" "attach_cloudwatch_agent" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
   name = "${var.vpc_name}-ec2-instance-profile"
-  role = aws_iam_role.ec2_s3_role.name
+  role = aws_iam_role.ec2_role.name
 }
 
 #rds
