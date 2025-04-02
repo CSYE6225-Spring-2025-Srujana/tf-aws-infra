@@ -70,7 +70,7 @@ resource "aws_security_group" "app_sg" {
   #   cidr_blocks = ["0.0.0.0/0"]
   # }
 
-    ingress {
+  ingress {
     from_port       = var.app_port
     to_port         = var.app_port
     protocol        = "tcp"

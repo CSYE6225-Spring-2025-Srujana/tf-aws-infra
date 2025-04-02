@@ -139,7 +139,7 @@ resource "aws_security_group" "db_sg" {
 
 resource "aws_db_parameter_group" "rds_param_group" {
   name   = "${var.vpc_name}-param-group"
-  family = "mysql8.0" 
+  family = "mysql8.0"
 
   parameter {
     name  = "character_set_server"
