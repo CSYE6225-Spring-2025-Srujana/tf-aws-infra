@@ -76,9 +76,6 @@ resource "aws_iam_policy" "ec2_s3_policy" {
         "s3:CreateBucket",
         "s3:PutBucketTagging",
         "s3:PutEncryptionConfiguration",
-        "iam:CreateRole",
-        "iam:AttachRolePolicy",
-        "iam:PassRole",
         "rds:CreateDBSubnetGroup",
         "rds:CreateDBParameterGroup"
       ],
@@ -86,27 +83,8 @@ resource "aws_iam_policy" "ec2_s3_policy" {
         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}",
         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}/*"
       ]
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "cloudwatch:PutMetricData",
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents",
-          "logs:DescribeLogStreams",
-          "logs:DescribeLogGroups"
-        ]
-        Resource = "*"
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "ssm:GetParameter",
-          "ssm:DescribeParameters"
-        ]
-        Resource = "arn:aws:ssm:*:*:parameter/AmazonCloudWatch-*"
-    }]
+      }
+    ]
   })
 }
 
@@ -134,6 +112,7 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
   }
 }
 
+# RDS Security Group
 resource "aws_security_group" "db_sg" {
   name        = "${var.vpc_name}-db-sg"
   description = "Security group for RDS instance"
@@ -160,7 +139,7 @@ resource "aws_security_group" "db_sg" {
 
 resource "aws_db_parameter_group" "rds_param_group" {
   name   = "${var.vpc_name}-param-group"
-  family = "mysql8.0" # Adjust to mysql5.7 or mariadb10.5 if needed
+  family = "mysql8.0" 
 
   parameter {
     name  = "character_set_server"

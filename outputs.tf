@@ -17,11 +17,15 @@ output "internet_gateway_id" {
   value = aws_internet_gateway.gw.id
 }
 
-output "webapp_public_ip" {
-  description = "Public IP of the WebApp EC2 instance"
-  value       = aws_instance.web_app.public_ip
-}
+# output "webapp_public_ip" {
+#   description = "Public IP of the WebApp EC2 instance"
+#   value       = aws_instance.eb_app.public_ip
+# }
 
 output "db_address" {
   value = aws_db_instance.rds_instance.address
+}
+
+output "webapp_url" {
+  value = aws_lb.web_alb.dns_name
 }
