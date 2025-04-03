@@ -93,7 +93,7 @@ resource "aws_launch_template" "webapp_lt" {
   tag_specifications {
     resource_type = "instance"
     tags = {
-      Name = "${var.vpc_name}-lt-webapp"
+      Name = "${var.vpc_name}-instance"
     }
   }
 }
@@ -110,6 +110,17 @@ resource "aws_autoscaling_group" "web_asg" {
   launch_template {
     id      = aws_launch_template.webapp_lt.id
     version = "$Latest"
+  }
+  tag {
+    key                 = "Environment"
+    value               = "${var.aws_profile}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Project"
+    value               = "CSYE-6225-WebApp"
+    propagate_at_launch = true
   }
 }
 
@@ -133,7 +144,7 @@ resource "aws_autoscaling_policy" "scale_down" {
 }
 
 
-# Scale Up Alarm - CPU > 5%
+# Scale Up Alarm - CPU > 9.5%
 resource "aws_cloudwatch_metric_alarm" "scale_up_alarm" {
   alarm_name          = "web-asg-scale-up"
   comparison_operator = "GreaterThanThreshold"
@@ -143,14 +154,14 @@ resource "aws_cloudwatch_metric_alarm" "scale_up_alarm" {
   period              = 60
   statistic           = "Average"
   threshold           = 9.5
-  alarm_description   = "Scale up if CPU > 5%"
+  alarm_description   = "Scale up if CPU > 9.5%"
   alarm_actions       = [aws_autoscaling_policy.scale_up.arn]
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.web_asg.name
   }
 }
 
-# Scale Down Alarm - CPU < 3%
+# Scale Down Alarm - CPU < 6.2%
 resource "aws_cloudwatch_metric_alarm" "scale_down_alarm" {
   alarm_name          = "web-asg-scale-down"
   comparison_operator = "LessThanThreshold"
@@ -160,7 +171,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_down_alarm" {
   period              = 60
   statistic           = "Average"
   threshold           = 6.2
-  alarm_description   = "Scale down if CPU < 3%"
+  alarm_description   = "Scale down if CPU < 6.2%"
   alarm_actions       = [aws_autoscaling_policy.scale_down.arn]
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.web_asg.name
