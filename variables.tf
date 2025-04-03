@@ -52,3 +52,8 @@ variable "app_port" {
   description = "Port on which the application runs"
   type        = number
 }
+
+variable "domain_name" {
+  description = "Name of the VPC"
+  type        = string
+}
