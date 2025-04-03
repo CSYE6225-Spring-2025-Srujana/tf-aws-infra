@@ -113,7 +113,7 @@ resource "aws_autoscaling_group" "web_asg" {
   }
   tag {
     key                 = "Environment"
-    value               = "${var.aws_profile}"
+    value               = var.aws_profile
     propagate_at_launch = true
   }
 
