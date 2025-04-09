@@ -57,7 +57,7 @@ resource "aws_lb_listener" "web_listener" {
 
 
 resource "aws_launch_template" "webapp_lt" {
-  name          = "${var.vpc_name}-webapp-lt"
+  name          = "webapp-lt"
   image_id      = data.aws_ami.webapp_ami.id
   instance_type = var.instance_type
 
