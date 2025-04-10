@@ -8,6 +8,19 @@ if [ ! -d "/opt/csye6225/webapp" ]; then
   exit 1
 fi
 
+if ! command -v jq &> /dev/null
+then
+    echo "jq could not be found, installing..."
+    sudo apt-get update -y
+    sudo apt-get install -y jq
+else
+    echo "jq is already installed."
+fi
+
+sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
 sudo chown -R csye6225:csye6225 /opt/csye6225/webapp
 sudo chmod -R 755 /opt/csye6225
 sudo chmod -R 755 /opt/csye6225/webapp
@@ -17,7 +30,10 @@ echo "Creating .env file..."
 cat <<EOF | sudo tee "$ENV_FILE" > /dev/null
 DB_HOST=${DB_HOST}
 DB_USER=${DB_USER}
-DB_PASSWORD=${DB_PASSWORD}
+DB_PASSWORD=$(aws secretsmanager get-secret-value \
+  --secret-id rdb-password-3 \
+  --query 'SecretString' \
+  --output text)
 DB_NAME=${DB_NAME}
 DB_PORT=${DB_PORT}
 DB_DIALECT=${DB_DIALECT}

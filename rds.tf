@@ -152,14 +152,17 @@ resource "aws_db_parameter_group" "rds_param_group" {
 }
 
 resource "aws_db_instance" "rds_instance" {
-  identifier             = "csye6225"
-  engine                 = "mysql"
-  engine_version         = "8.0" # Adjust as needed
-  instance_class         = "db.t3.micro"
-  allocated_storage      = 20
-  db_name                = "csye6225"
-  username               = "csye6225"
-  password               = var.rds_db_password
+  identifier        = "csye6225"
+  engine            = "mysql"
+  engine_version    = "8.0" # Adjust as needed
+  instance_class    = "db.t3.micro"
+  allocated_storage = 20
+  db_name           = "csye6225"
+  username          = "csye6225"
+  # password               = var.rds_db_password
+  password               = random_password.db_password.result
+  storage_encrypted      = true
+  kms_key_id             = aws_kms_key.rds_kms_key.arn
   db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
   vpc_security_group_ids = [aws_security_group.db_sg.id]
   multi_az               = false

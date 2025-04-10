@@ -39,12 +39,12 @@ resource "aws_security_group" "app_sg" {
   vpc_id      = aws_vpc.main.id
 
   # Allow SSH (Port 22)
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # ingress {
+  #   from_port   = 22
+  #   to_port     = 22
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
 
   # Allow HTTP (Port 80)
   # ingress {

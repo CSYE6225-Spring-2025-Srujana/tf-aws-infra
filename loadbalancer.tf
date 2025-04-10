@@ -4,12 +4,12 @@ resource "aws_security_group" "alb_sg" {
   description = "Security group for the application load balancer"
   vpc_id      = aws_vpc.main.id
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # ingress {
+  #   from_port   = 80
+  #   to_port     = 80
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
 
   ingress {
     from_port   = 443
@@ -43,11 +43,22 @@ resource "aws_lb_target_group" "web_tg" {
   vpc_id   = aws_vpc.main.id
 }
 
+data "aws_acm_certificate" "ssl_certificate" {
+  domain   = "${var.aws_profile}.${var.domain_name}"
+  statuses = ["ISSUED"]
+}
+
 # Listener
 resource "aws_lb_listener" "web_listener" {
   load_balancer_arn = aws_lb.web_alb.arn
-  port              = 80
-  protocol          = "HTTP"
+  # port              = 80
+  # protocol          = "HTTP"
+
+  port     = 443
+  protocol = "HTTPS"
+
+  ssl_policy      = "ELBSecurityPolicy-2016-08"
+  certificate_arn = data.aws_acm_certificate.ssl_certificate.arn
 
   default_action {
     type             = "forward"
@@ -87,6 +98,8 @@ resource "aws_launch_template" "webapp_lt" {
       volume_size           = 25
       volume_type           = "gp2"
       delete_on_termination = true
+      encrypted             = true
+      kms_key_id            = aws_kms_key.ec2_kms.arn
     }
   }
 
