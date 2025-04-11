@@ -57,3 +57,27 @@ variable "domain_name" {
   description = "Name of the VPC"
   type        = string
 }
+
+variable "enable_key_rotation" {
+  type        = bool
+  description = "Enable Key Rotation"
+  default     = true
+}
+
+variable "rotation_period_in_days" {
+  type        = number
+  description = "Key Rotation Period"
+  default     = 90
+}
+
+variable "password_length" {
+  type        = number
+  description = "Password Length"
+  default     = 16
+}
+
+variable "password_special" {
+  type        = bool
+  description = "Special Characters In Password"
+  default     = false
+}

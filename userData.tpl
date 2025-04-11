@@ -17,7 +17,10 @@ echo "Creating .env file..."
 cat <<EOF | sudo tee "$ENV_FILE" > /dev/null
 DB_HOST=${DB_HOST}
 DB_USER=${DB_USER}
-DB_PASSWORD=${DB_PASSWORD}
+DB_PASSWORD=$(aws secretsmanager get-secret-value \
+  --secret-id ${SECRET_NAME}\
+  --query 'SecretString' \
+  --output text)
 DB_NAME=${DB_NAME}
 DB_PORT=${DB_PORT}
 DB_DIALECT=${DB_DIALECT}

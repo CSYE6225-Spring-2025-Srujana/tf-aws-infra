@@ -20,7 +20,9 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bucket_enc" {
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+      # sse_algorithm = "AES256" #add kms-s3 key
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.s3_kms.arn
     }
   }
 }
@@ -83,7 +85,18 @@ resource "aws_iam_policy" "ec2_s3_policy" {
         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}",
         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}/*"
       ]
-      }
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt",
+          "kms:CreateGrant",
+          "kms:GenerateDataKey",
+        ]
+        Resource = [
+          aws_kms_key.s3_kms.arn
+        ]
+      },
     ]
   })
 }
@@ -152,14 +165,17 @@ resource "aws_db_parameter_group" "rds_param_group" {
 }
 
 resource "aws_db_instance" "rds_instance" {
-  identifier             = "csye6225"
-  engine                 = "mysql"
-  engine_version         = "8.0" # Adjust as needed
-  instance_class         = "db.t3.micro"
-  allocated_storage      = 20
-  db_name                = "csye6225"
-  username               = "csye6225"
-  password               = var.rds_db_password
+  identifier        = "csye6225"
+  engine            = "mysql"
+  engine_version    = "8.0" # Adjust as needed
+  instance_class    = "db.t3.micro"
+  allocated_storage = 20
+  db_name           = "csye6225"
+  username          = "csye6225"
+  # password               = var.rds_db_password
+  password               = random_password.db_password.result
+  storage_encrypted      = true
+  kms_key_id             = aws_kms_key.rds_kms_key.arn
   db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
   vpc_security_group_ids = [aws_security_group.db_sg.id]
   multi_az               = false
