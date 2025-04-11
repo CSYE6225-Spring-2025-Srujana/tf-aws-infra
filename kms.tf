@@ -116,9 +116,9 @@ resource "random_password" "db_password" {
 }
 
 resource "aws_secretsmanager_secret" "db_password" {
-  name       = "rdb-password-4"
-  kms_key_id = aws_kms_key.secrets_manager_key.arn
-  recovery_window_in_days =0
+  name                    = "rdb-password-4"
+  kms_key_id              = aws_kms_key.secrets_manager_key.arn
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "db_password_version" {
