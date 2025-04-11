@@ -20,7 +20,9 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bucket_enc" {
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+      # sse_algorithm = "AES256" #add kms-s3 key
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.s3_kms.arn
     }
   }
 }
@@ -83,7 +85,18 @@ resource "aws_iam_policy" "ec2_s3_policy" {
         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}",
         "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}/*"
       ]
-      }
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt",
+          "kms:CreateGrant",
+          "kms:GenerateDataKey",
+        ]
+        Resource = [
+          aws_kms_key.s3_kms.arn
+        ]
+      },
     ]
   })
 }

@@ -90,6 +90,7 @@ resource "aws_launch_template" "webapp_lt" {
     DB_FORCE_CHANGES = false
     S3_BUCKET_NAME   = aws_s3_bucket.webapp_bucket.bucket
     AWS_REGION       = var.aws_region
+    SECRET_NAME      = aws_secretsmanager_secret.db_password.name
   }))
 
   block_device_mappings {
